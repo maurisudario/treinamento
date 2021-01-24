@@ -2,92 +2,89 @@
 # -*- encode: utf-8 -*-
 __author__ = '@MauriSudario'
 
+print("Calculo conta CAESB")
+consumo = float(input("Quantidade que foi consumida: "))
+quantidade_de_unidades = int(input("Quantidade de unidade: "))
+consumo_medio = (consumo / quantidade_de_unidades)
+categoria = ''
 
-cliente=input("tipo de cliente?")
-cliente = {
-    1: residencial_padrao
-    2: residensial_social
-    3: comercial
-    4: paisagismo
-}
-
-consumo=0
-consumo= float(input("Qual seu consumo?"))
+while categoria != 'residencial' or categoria != 'nao-residencial':
+    categoria = str(input("A categoria da unidade é residencial ou nao-residencial? ")).lower()
+    if categoria == 'residencial' or categoria == 'nao-residencial':
+        break
 
 
-consumo = 0
-consumo = float(input("Qual seu consumo?"))
 
-if cliente == 1:
-    elif consumo <= 7:
-    conta = 7 * 2.99
-    print("Sua conta vai ser de: ", conta)
-    elif consumo  ( <= 8) and ( >= 13):
-    conta = 6 * 3.59
-    print("Sua conta vai ser de: ", conta)
-    elif consumo  ( <= 14) and ( >= 20):
-    conta = 7 * 7.10
-    print("Sua conta vai ser de: ", conta)
-    elif consumo ( <= 21) and ( >= 30):
-    conta = 10 * 10.66
-    print("Sua conta vai ser de: ", conta)
-    elif consumo  ( <= 31) and ( >= 45):
-    conta = 15 * 17.05
-    print("Sua conta vai ser de: ", conta)
-    else consumo  >= 46:
-    conta = consumo * 23, 87
-    print("Sua conta vai ser de: ", conta)
+if categoria == 'residencial':
+    tarifa_social = str(input("Possui direito a tarifa social? (sim ou não) ")).lower()
+    if tarifa_social == 'sim':
+        tarifa = 4.00
+        if (consumo_medio <= 7):
+            faixa = 1.49
+        elif (consumo_medio >= 8 and consumo_medio <= 13):
+            faixa = 1.79
+        elif (consumo_medio >= 14 and consumo_medio <= 20):
+            faixa = 3.55
+        elif (consumo_medio >= 21 and consumo_medio <= 30):
+            faixa = 5.33
+        elif (consumo_medio >= 31 and consumo_medio <= 45):
+            faixa = 17.05
+        else:
+            faixa = 23.87
+    else:
+        tarifa = 8.00
+        if (consumo_medio <= 7):
+            faixa = 2.99
+        elif (consumo_medio >= 8 and consumo_medio <= 13):
+            faixa = 3.59
+        elif (consumo_medio >= 14 and consumo_medio <= 20):
+            faixa = 7.10
+        elif (consumo_medio >= 21 and consumo_medio <= 30):
+            faixa = 10.66
+        elif (consumo_medio >= 31 and consumo_medio <= 45):
+            faixa = 17.05
+        else:
+            faixa = 23.87
+else:
+    tarifa = 21.00
+    if (consumo_medio <= 4):
+        faixa = 6.14
+    elif (consumo_medio >= 5 and consumo_medio <= 7):
+        faixa = 7.68
+    elif (consumo_medio >= 8 and consumo_medio <= 10):
+        faixa = 9.98
+    elif (consumo_medio >= 11 and consumo_medio <= 40):
+        faixa = 12.48
+    else:
+        faixa = 14.97
 
-if cliente == 2:
-    elif consumo  <= 7:
-    conta = 7 * 1.49
-    print("Sua conta vai ser de: ", conta)
-    elif consumo  ( <= 8) and ( >= 13):
-    conta = 6 * 1.79
-    print("Sua conta vai ser de: ", conta)
-    elif consumo ( <= 14) and ( >= 20):
-    conta = 7 * 3.55
-    print("Sua conta vai ser de: ", conta)
-    elif consumo  ( <= 21) and ( >= 30):
-    conta = 10 * 5.33
-    print("Sua conta vai ser de: ", conta)
-    elif consumo  (<= 31) and ( >= 45):
-    conta = 15 * 17.05
-    print("Sua conta vai ser de: ", conta)
-    else consumo (>= 46):
-    conta = consumo * 23, 87
-    print("Sua conta vai ser de: ", conta)
+print ("")
+print ("Cada residencia consumiu em média: {:.2f}".format(consumo_medio),'m³', '\n')
 
-if cliente == 3:
-    elif consumo  <= 4:
-    conta = 4 * 6.14
-    print("Sua conta vai ser de: ", conta)
-    elif consumo ( <= 5) and ( >= 7):
-    conta = 3 * 7.68
-    print("Sua conta vai ser de: ", conta)
-    elif consumo  ( <= 8) and ( >= 10):
-    conta = 3 * 9.98
-    print("Sua conta vai ser de: ", conta)
-    elif consumo  ( <= 11) and ( >= 40):
-    conta = 30 * 12.48
-    print("Sua conta vai ser de: ", conta)
-    else consumo  >= 41:
-    conta = consumo * 14.97
-    print("Sua conta vai ser de: ", conta)
+print("Alíquota Preço p/ m³: {:.2f}".format(faixa),'\n')
 
-if cliente == 4:
-    elif consumo <= 4:
-    conta = 4 * 9.21
-    print("Sua conta vai ser de: ", conta)
-    elif consumo  (<= 5) and ( >= 7):
-    conta = 3 * 11.52
-    print("Sua conta vai ser de: ", conta)
-    elif consumo  (<= 8) and ( >= 10):
-    conta = 3 * 14.97
-    print("Sua conta vai ser de: ", conta)
-    elif consumo ( <= 11) and ( >= 40):
-    conta = 30 * 18.72
-    print("Sua conta vai ser de: ", conta)
-    else consumo  >= 41:
-    conta = consumo * 22.46
-    print("Sua conta vai ser de: ", conta)
+valor_gasto = (consumo_medio * faixa * quantidade_de_unidades ) + (tarifa * quantidade_de_unidades)
+
+print ("Valor total do consumo de todas as unidades + tarifa fixa: R$ {:.2f}".format(valor_gasto),'\n')
+
+conta_agua = (valor_gasto / quantidade_de_unidades)
+
+print ("Valor do consumo da conta de água + tarifa fixa (cada residência): R$ {:.2f}".format(conta_agua),'\n')
+
+condicao_do_imovel = str(input("O imóvel está em obra ? ")).lower()
+
+
+if (condicao_do_imovel == "sim"):
+    total_a_pagar = conta_agua * 1.5
+    print ("")
+    print ("Conta total incluindo (Água + Esgoto + Taxas) R$ {:.2f}".format(total_a_pagar))
+else:
+    tipo_do_imovel = str(input("Qual o tipo de sistema: convencional ou condominial ?")).lower()
+    if (tipo_do_imovel == 'convencional'):
+        print ("")
+        total_a_pagar = conta_agua * 2
+        print ("Conta total incluindo (Água + Esgoto + Taxas) R$ {:.2f}".format(total_a_pagar))
+    else:
+        print("")
+        total_a_pagar = conta_agua * 1.6
+        print ("Conta total incluindo (Água + Esgoto + Taxas) R$ {:.2f}".format(total_a_pagar))
