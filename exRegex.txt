@@ -1,0 +1,21 @@
+Crie um regex para filtrar emails brasileiros;
+[a-z0-9._-]+@[a-z0-9]+
+
+Crie um regex para filtrar emails mundiais;
+([\w-]+(?:.[\w-]+))@((?:.[\w[\w-]{0,66}).([a-z]{2,6}(?:.[a-z]{2})?))
+
+Crie um regex para filtrar CEP;
+[0-9]{5}.[0-9]{3}
+
+Crie um regex para filtrar números de telefones fixos;
+(\(?\d{2}\)?\s)?(\d{4,5}\-\d{4})
+
+Crie um regex para filtrar números de telefones celulares;
+^\(?[1-9]{2}\)? ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}
+
+Crie um regex para filtrar DDD com números de telefones fixos e celulares;
+/^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))
+
+Crie um regex para filtrar números brasileiros com código internacional, DDD e números de telefones fixos e celulares;
+((+[0-9]{2})|0)[.- ]?9[0-9]{2}[.- ]?[0-9]{3}[.- ]?[0-9]{4}
+

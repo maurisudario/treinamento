@@ -454,7 +454,7 @@ def ex06():
             if numero.isdigit():
                 num = int(numero)
 
-                if num > 0 and num <= 150:
+                if 0 < num <= 150:
                     self.__canal = num
                 else:
                     print("Canal Inválido")
@@ -472,7 +472,7 @@ def ex06():
             if numero.isdigit():
                 num = int(numero)
 
-                if num >= 0 and num <= 100:
+                if 0 <= num <= 100:
                     self.__volume = num
                 else:
                     print("O volume deve ser entre 0 e 100")
@@ -1308,4 +1308,3 @@ def ex17():
     (alimentar todos os bichinhos, brincar com todos os bichinhos, ou ouvir a todos os bichinhos).
     Para tornar o programa mais interessante, dê para cada bichinho um nível inicial aleatório de fome e tédio. """
 
-    

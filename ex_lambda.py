@@ -56,3 +56,23 @@ def ex02():
     programa para ler as quantidades de pães e de broas, calcular a venda total de pãos e broas, o
     custo de fabricação, quanto irá guardar na poupança e quantos euros irá comprar. Ao final exibir os
     dados calculados.  """
+
+    pao = int(input("Quantidade de pães vendidos: "))
+
+    broa = int(input("Quantidade de broas vendidas: "))
+
+    print()
+
+    calc_pao = pao * 0.12
+
+    calc_broa = broa * 1.50
+
+    soma = calc_pao + calc_broa
+
+    perce = (soma * 10) / 100
+
+    print("Total diário: %.2f" % soma, "R$")
+
+    print("O valor que deve ser depósitado em conta é: ", perce, "R$")
+
+
