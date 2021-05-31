@@ -1,0 +1,171 @@
+@page "/CadastroFornecedores"
+@inject IJSRuntime JS;
+
+<h1>Cadastro de Fornecedores no sistema</h1>
+
+<ul class="nav nav-tabs" id="TabPrincipal" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="tabLista" data-toggle="tab" href="#Lista" role="tab" aria-controls="home"
+            aria-selected="true">Listar Fornecedores</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="tabForm" data-toggle="tab" href="#Formulario" role="tab" aria-controls="profile"
+            aria-selected="false">Cadastrar/Alterar</a>
+    </li>
+</ul>
+
+<div class="tab-content" id="ContentTabLista">
+    <div class="tab-pane fade show active" id="Lista" role="tabpanel" aria-labelledby="home-tab">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>
+                    </th>
+                    <th>
+                        Cod Fornecedor
+                    </th>
+                    <th>
+                        Empresa
+                    </th>
+                    <th>
+                        CNPJ
+                    </th>
+                    <th>
+                        Telefone
+                    </th>
+                    <th>
+                        E-mail
+                    </th>
+                    <th>
+                        Situação
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (FORNECEDOR item in TodosFornecedores)
+                {
+                    <tr>
+                        <td>
+                            <button type="button" class="btn btn-primary" @onclick="() => AlterarForneccedor(item)">
+                                <span class="oi oi-person" aria-hidden="true"></span>
+                            </button>
+                        </td>
+                        <td>@item.FORNID</td>
+                        <td>@item.FORNEMPRESA</td>
+                        <td>@item.FORNCNPJ</td>
+                        <td>@item.FORNTELEFONE</td>
+                        <td>@item.FORNEMAIL</td>
+                        <td>@item.FORNATIVO</td>
+                        <td>
+                            <button type="button" class="btn btn-danger" @onclick="() => ExcluirFornecedor(item)">
+                                <span class="oi oi-trash" aria-hidden="true"></span>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="tab-pane fade" id="Formulario" role="tabpanel" aria-labelledby="profile-tab">
+        <div style="width: 800px;padding: 40px;">
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="txtNome" style="width:120px;">Empresa:</label>
+                <input type="text" id="txtNome" class="form-control" @bind="usuario.FORNEMPRESA">
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="txtEmail" style="width:120px;">Email:</label>
+                <input type="text" id="txtEmail" class="form-control" @bind="usuario.FORNEMAIL">
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="txtCPF" style="width:120px;">CNPJ:</label>
+                <input type="text" id="txtCPF" maxlength="14" class="form-control" @bind="usuario.FORNCNPJ">
+
+                <label class="input-group-text" for="txtTelefone" style="width:120px;">Telefone:</label>
+                <input type="text" id="txtTelefone" class="form-control" @bind="usuario.FORNTELEFONE">
+            </div>
+            
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="flexCheckDefault" @bind="usuario.FORNATIVO">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Ativo?
+                </label>
+            </div>
+            <div style="text-align: center;">
+                <input type="button" value="Gravar" @onclick="GravarUsuario" class="btn btn-primary">
+                <input type="button" value="Cancelar" @onclick="CancelarAcao" class="btn btn-warning">
+            </div>
+            <br>
+            <div class="alert alert-danger" style="display: @MostrarMensam;">
+                <strong>Atenção!</strong> Campos Obrigatório: Nome, Email, Login E Senha.
+            </div>
+        </div>
+    </div>
+</div>
+
+@code
+{
+    public string MostrarMensam = "none";
+    public Fornecedor fornecedor = new Fornecedor();
+
+    public IList<Fornecedor> TodosFornecedores = new List<Fornecedor>();
+
+    protected override async Task OnInitializedAsync()//Quando Inicia a página
+    {
+        CarregarFornecedores();
+    }
+
+    public void CarregarFornecedores()
+    {
+        TodosFornecedores = new FornecedorDAO().BuscarFornecedores();
+    }
+    async Task ExcluirFornecedor(Fornecedor fornecedor)
+    {
+        new FornecedorDAO().ExcluirFornecedor(Fornecedor);
+        //JS.InvokeAsync<string>("ShowTab", "tabForm");
+        CarregarFornecedores();
+    }
+
+    async Task AlterarFornecedor(Fornecedor _fornecedor)
+    {
+        fornecedor = _fornecedor;
+        JS.InvokeAsync<string>("ShowTab", "tabForm");
+    }
+
+    public void GravarFornecedor()
+    {
+        fornecedor.FORNDATAHORACRIACAO = DateTime.Now;
+        if(string.IsNullOrEmpty(fornecedor.FORNLOGIN) || 
+           string.IsNullOrEmpty(fornecedor.FORNEMAIL) ||
+           string.IsNullOrEmpty(fornecedor.FORNEMPRESA)||
+           string.IsNullOrEmpty(fornecedor.FORNSENHA))
+        {
+            MostrarMensam = "block";
+        }else
+        {
+            if(fornecedor.FORNID>0)
+            {
+                //Isso é uma alteração
+                new FornecedorDAO().AtualizarFornecedor(fornecedor);
+            }
+            else
+            {
+                new FornecedorDAO().InserirFornecedor(fornecedor);
+            }
+
+            CarregarFornecedor();
+            fornecedor = new Fornecedor();
+            JS.InvokeAsync<string>("ShowTab", "tabLista");
+        }
+    }
+
+    public void CancelarAcao()
+    {
+        fornecedor = new Fornecedor();
+        JS.InvokeAsync<string>("ShowTab", "tabLista");
+    }
+}
