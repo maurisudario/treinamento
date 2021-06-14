@@ -69,15 +69,15 @@ using Microsoft.JSInterop;
 #line hidden
 #nullable disable
 #nullable restore
-#line 9 "D:\Uniceub\2021\ADS\_Imports.razor"
-using ProjetoBlazor;
+#line 10 "D:\Uniceub\2021\ADS\_Imports.razor"
+using ProjetoBlazor.Shared;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 10 "D:\Uniceub\2021\ADS\_Imports.razor"
-using ProjetoBlazor.Shared;
+#line 3 "D:\Uniceub\2021\ADS\Shared\MainLayout.razor"
+using ProjetoBlazor;
 
 #line default
 #line hidden
@@ -89,6 +89,32 @@ using ProjetoBlazor.Shared;
         {
         }
         #pragma warning restore 1998
+#nullable restore
+#line 27 "D:\Uniceub\2021\ADS\Shared\MainLayout.razor"
+ 
+    public Usuario UsuarioLogado = null;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try{
+                UsuarioLogado = await localStorage.GetItemAsync<Usuario>("UsuarioLogado");
+                if(UsuarioLogado==null)
+                    NavManager.NavigateTo("/Login");                    
+            }
+            catch
+            {
+                NavManager.NavigateTo("/Login");                    
+            }
+            StateHasChanged();
+        }
+    }
+
+#line default
+#line hidden
+#nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private NavigationManager NavManager { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
     }
 }
 #pragma warning restore 1591

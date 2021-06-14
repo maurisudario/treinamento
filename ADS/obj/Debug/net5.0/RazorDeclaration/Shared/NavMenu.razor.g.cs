@@ -90,7 +90,7 @@ using ProjetoBlazor.Shared;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 21 "D:\Uniceub\2021\ADS\Shared\NavMenu.razor"
+#line 24 "D:\Uniceub\2021\ADS\Shared\NavMenu.razor"
        
     private bool collapseNavMenu = true;
 

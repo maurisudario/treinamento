@@ -1,4 +1,7 @@
 @inherits LayoutComponentBase
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@using ProjetoBlazor
+@inject NavigationManager NavManager
 
 <div class="page">
     <div class="sidebar">
@@ -7,7 +10,12 @@
 
     <div class="main">
         <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+
+            @if(UsuarioLogado!=null)
+            {
+                <span class="oi oi-person" aria-hidden="true" style="padding-right:5px;"></span>@UsuarioLogado.USUNOMECOMPLETO
+            }
+
         </div>
 
         <div class="content px-4">
@@ -15,3 +23,23 @@
         </div>
     </div>
 </div>
+@code
+{
+    public Usuario UsuarioLogado = null;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try{
+                UsuarioLogado = await localStorage.GetItemAsync<Usuario>("UsuarioLogado");
+                if(UsuarioLogado==null)
+                    NavManager.NavigateTo("/Login");                    
+            }
+            catch
+            {
+                NavManager.NavigateTo("/Login");                    
+            }
+            StateHasChanged();
+        }
+    }
+}

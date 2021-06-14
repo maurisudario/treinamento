@@ -12,7 +12,8 @@ namespace ProjetoBlazor
     public class UsuarioDAO
     {
         string Conexao01 = @"Server=LENOVO_EDES\SQLEXPRESS;Database=dbsistec;User Id=usrceub;Password=123456;MultipleActiveResultSets=True";
-        string Conexao02 = @"Data Source=LENOVO_EDES\SQLEXPRESS;Initial Catalog=dbsistec;User Id=usrceub;Password=123456;MultipleActiveResultSets=True";
+
+        string ConexaoMyql = "Server=localhost;Database=test;Uid=usuario;Pwd=senha";
 
         public UsuarioDAO()
         {
@@ -22,6 +23,11 @@ namespace ProjetoBlazor
         ///CRUD
         public void InserirUsuario(Usuario usuario)
         {
+            /*using (MySql.Data.MySqlClient.MySqlConnection conn = new MySql.Data.MySqlClient.MySqlConnection(ConexaoMyql))
+            {
+                conn.Open();
+                conn.Insert<Usuario>(usuario);
+            }*/
             //Conectar ao Banco de Dados e dar um insert
             using (System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(Conexao01))
             {
@@ -57,6 +63,17 @@ namespace ProjetoBlazor
                 conn.Open();
                 return conn.Get<Usuario>(UsuarioId);
                 //return conn.Query<Usuario>(sql,new{USUID=UsuarioId}).FirstOrDefault();
+            } 
+        }
+
+        public Usuario BuscarUsuarioByLogin(string Login, string Senha)
+        {
+            string sql = "Select * from TB_Usuario Where USULOGIN=@USULOGIN And USUSENHA=@USUSENHA";
+            
+            using (System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(Conexao01))
+            {
+                conn.Open();
+                return conn.Query<Usuario>(sql,new{USULOGIN=Login,USUSENHA=Senha}).FirstOrDefault();
             } 
         }
 

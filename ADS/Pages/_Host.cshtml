@@ -33,10 +33,39 @@
     <script src="_framework/blazor.server.js"></script>
     <script src="js/jquery-3.3.1.slim.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="https://igorescobar.github.io/jQuery-Mask-Plugin/js/jquery.mask.min.js"></script>
+
 
     <script>
+
+        var ObjFoco;
+
         function ShowTab(IdReferencia) {
             $('#' + IdReferencia).click()
+        }
+
+        function ShowModal(IdReferencia, IdReferenciaFocu)
+        {
+            ObjFoco = IdReferenciaFocu;
+            $('#'+IdReferencia).modal('show'); 
+        }
+        function HideModal(IdReferencia)
+        {
+            $('#'+IdReferencia).modal('hide'); 
+        }
+
+        function SetarFoco()
+        {
+            $('#'+ObjFoco).focus();
+            //setTimeout($('#'+ObjFoco).focus(),1000)
+            //console.log($('#'+ObjFoco))
+            //; 
+        }
+
+        function LoadPage()
+        {
+            $('#txtTelefone').mask('(00) 0 0000-0000');
+            $('#txtCPF').mask('000.000.000-00', {reverse: true});
         }
     </script>
 </body>

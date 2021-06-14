@@ -82,6 +82,13 @@ using ProjetoBlazor.Shared;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 2 "D:\Uniceub\2021\ADS\Pages\CadastroUsuario.razor"
+using System.Text.RegularExpressions;
+
+#line default
+#line hidden
+#nullable disable
     [Microsoft.AspNetCore.Components.RouteAttribute("/CadastroUsuario")]
     public partial class CadastroUsuario : Microsoft.AspNetCore.Components.ComponentBase
     {
@@ -91,9 +98,10 @@ using ProjetoBlazor.Shared;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 114 "D:\Uniceub\2021\ADS\Pages\CadastroUsuario.razor"
+#line 160 "D:\Uniceub\2021\ADS\Pages\CadastroUsuario.razor"
  
     public string MostrarMensam = "none";
+    public string CamposObrigatorio = "";
     public Usuario usuario = new Usuario();
 
     public IList<Usuario> TodosUsuarios = new List<Usuario>();
@@ -101,17 +109,40 @@ using ProjetoBlazor.Shared;
     protected override async Task OnInitializedAsync()//Quando Inicia a página
     {
         CarregarUsuarios();
+        JS.InvokeAsync<string>("LoadPage", "");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            JS.InvokeAsync<string>("LoadPage", "");
+            StateHasChanged();
+        }
     }
 
     public void CarregarUsuarios()
     {
         TodosUsuarios = new UsuarioDAO().BuscarUsuarios();
     }
-    async Task ExcluirUsuario(Usuario usuario)
+    async Task ExcluirUsuario(Usuario _usuario)
     {
-        new UsuarioDAO().ExcluirUsuario(usuario);
+        usuario = _usuario;
+        JS.InvokeAsync<string>("ShowModal", "ModalConfirmarExclusao");
+        //new UsuarioDAO().ExcluirUsuario(usuario);
         //JS.InvokeAsync<string>("ShowTab", "tabForm");
-        CarregarUsuarios();
+        //CarregarUsuarios();
+    }
+
+    public void ExcluirUsuarioConfirmacao()
+    {
+        if (usuario.USUID > 0)
+        {
+            new UsuarioDAO().ExcluirUsuario(usuario);
+            CarregarUsuarios();
+            usuario = new Usuario();
+            JS.InvokeAsync<string>("HideModal", "ModalConfirmarExclusao");
+        }
     }
 
     async Task AlterarUsuario(Usuario _usuario)
@@ -122,36 +153,127 @@ using ProjetoBlazor.Shared;
 
     public void GravarUsuario()
     {
+        CamposObrigatorio = "";
+
         usuario.USUDATAHORACRIACAO = DateTime.Now;
-        if(string.IsNullOrEmpty(usuario.USULOGIN) || 
-           string.IsNullOrEmpty(usuario.USUEMAIL) ||
-           string.IsNullOrEmpty(usuario.USUNOMECOMPLETO)||
-           string.IsNullOrEmpty(usuario.USUSENHA))
+        if (string.IsNullOrEmpty(usuario.USULOGIN) ||
+        string.IsNullOrEmpty(usuario.USUEMAIL) ||
+        string.IsNullOrEmpty(usuario.USUNOMECOMPLETO) ||
+        string.IsNullOrEmpty(usuario.USUSENHA))
         {
-            MostrarMensam = "block";
-        }else
-        {
-            if(usuario.USUID>0)
+            if (string.IsNullOrEmpty(usuario.USUNOMECOMPLETO))
             {
-                //Isso é uma alteração
-                new UsuarioDAO().AtualizarUsuario(usuario);
+                CamposObrigatorio = "Campos Nome é obrigatório";
             }
-            else
+            else if (string.IsNullOrEmpty(usuario.USUEMAIL))
             {
-                new UsuarioDAO().InserirUsuario(usuario);
+                CamposObrigatorio = "Campos Email é obrigatório";
+            }
+            else if (string.IsNullOrEmpty(usuario.USULOGIN))
+            {
+                CamposObrigatorio = "Campos Login é obrigatório";
+            }
+            else if (string.IsNullOrEmpty(usuario.USUSENHA))
+            {
+                CamposObrigatorio = "Campos Senha é obrigatório";
             }
 
-            CarregarUsuarios();
-            usuario = new Usuario();
-            JS.InvokeAsync<string>("ShowTab", "tabLista");
+            JS.InvokeAsync<string>("ShowModal", "ModalCamposObrigatorios","txtNome");
+            //MostrarMensam = "block";
+        }
+        else
+        {
+            bool Validado = true;
+
+            if (!string.IsNullOrEmpty(usuario.USUEMAIL))
+            {
+                Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+                Match match = regex.Match(usuario.USUEMAIL);
+                if (!match.Success)
+                {
+                    
+                    CamposObrigatorio = "Campos Email é inválido";
+                    JS.InvokeAsync<string>("ShowModal", "ModalCamposObrigatorios");
+                    Validado = false;    
+                }
+            }
+
+            if (!string.IsNullOrEmpty(usuario.USUCPF))
+            {
+
+                if (!IsCpf(usuario.USUCPF))
+                {
+                    CamposObrigatorio = "Campos CPF é inválido";
+
+                    JS.InvokeAsync<string>("ShowModal", "ModalCamposObrigatorios");
+                    Validado = false;
+                }
+            }
+
+            if(Validado)
+            {
+                if (usuario.USUID > 0)
+                {
+                    //Isso é uma alteração
+                    new UsuarioDAO().AtualizarUsuario(usuario);
+                }
+                else
+                {
+                    new UsuarioDAO().InserirUsuario(usuario);
+                }
+
+                CarregarUsuarios();
+                usuario = new Usuario();
+                JS.InvokeAsync<string>("ShowTab", "tabLista");
+            }
         }
     }
+
+    
 
     public void CancelarAcao()
     {
         usuario = new Usuario();
         JS.InvokeAsync<string>("ShowTab", "tabLista");
     }
+
+    public static bool IsCpf(string cpf)
+    {
+        int[] multiplicador1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+        int[] multiplicador2 = new int[10] { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+        string tempCpf;
+        string digito;
+        int soma;
+        int resto;
+        cpf = cpf.Trim();
+        cpf = cpf.Replace(".", "").Replace("-", "");
+        if (cpf.Length != 11)
+            return false;
+        tempCpf = cpf.Substring(0, 9);
+        soma = 0;
+
+        for (int i = 0; i < 9; i++)
+            soma += int.Parse(tempCpf[i].ToString()) * multiplicador1[i];
+        resto = soma % 11;
+        if (resto < 2)
+            resto = 0;
+        else
+            resto = 11 - resto;
+        digito = resto.ToString();
+        tempCpf = tempCpf + digito;
+        soma = 0;
+        for (int i = 0; i < 10; i++)
+            soma += int.Parse(tempCpf[i].ToString()) * multiplicador2[i];
+        resto = soma % 11;
+        if (resto < 2)
+            resto = 0;
+        else
+            resto = 11 - resto;
+        digito = digito + resto.ToString();
+        return cpf.EndsWith(digito);
+
+    }
+
 
 #line default
 #line hidden

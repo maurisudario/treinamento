@@ -82,7 +82,7 @@ using ProjetoBlazor.Shared;
 #line default
 #line hidden
 #nullable disable
-    [Microsoft.AspNetCore.Components.RouteAttribute("/")]
+    [Microsoft.AspNetCore.Components.RouteAttribute("/Principal")]
     public partial class Index : Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998
@@ -91,22 +91,30 @@ using ProjetoBlazor.Shared;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 9 "D:\Uniceub\2021\ADS\Pages\Index.razor"
+#line 13 "D:\Uniceub\2021\ADS\Pages\Index.razor"
  
-    /*public Usuario usuario =null;
-
-    public IList<Usuario> TodosUsuarios = new List<Usuario>();
-
-    protected override async Task OnInitializedAsync()
+    public Usuario UsuarioLogado = null;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        usuario = new UsuarioDAO().BuscarUsuario(2);
-
-        TodosUsuarios = new UsuarioDAO().BuscarUsuarios();
-    }*/
+        if (firstRender)
+        {
+            try
+            {
+                UsuarioLogado = await localStorage.GetItemAsync<Usuario>("UsuarioLogado");
+            }
+            catch
+            {
+                NavManager.NavigateTo("/Login");                    
+            }
+            StateHasChanged();
+        }
+    }
 
 #line default
 #line hidden
 #nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private NavigationManager NavManager { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
     }
 }
 #pragma warning restore 1591

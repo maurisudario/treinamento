@@ -1,20 +1,30 @@
-@page "/"
+@page "/Principal"
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager NavManager
 
-<h1>Bem vindos a aplicação</h1>
-
+@if(UsuarioLogado!=null)
+{
+    <h1>@UsuarioLogado.USUNOMECOMPLETO Bem vindos a aplicação </h1>
+}
 <h1>Exemplo do uso de Blazor (ASP.NET)</h1>
 
 
 @code
 {
-    /*public Usuario usuario =null;
-
-    public IList<Usuario> TodosUsuarios = new List<Usuario>();
-
-    protected override async Task OnInitializedAsync()
+    public Usuario UsuarioLogado = null;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        usuario = new UsuarioDAO().BuscarUsuario(2);
-
-        TodosUsuarios = new UsuarioDAO().BuscarUsuarios();
-    }*/
+        if (firstRender)
+        {
+            try
+            {
+                UsuarioLogado = await localStorage.GetItemAsync<Usuario>("UsuarioLogado");
+            }
+            catch
+            {
+                NavManager.NavigateTo("/Login");                    
+            }
+            StateHasChanged();
+        }
+    }
 }

@@ -1,4 +1,5 @@
 @page "/CadastroUsuario"
+@using System.Text.RegularExpressions
 @inject IJSRuntime JS;
 
 <h1>Cadastro de Usuários no sistema</h1>
@@ -70,49 +71,95 @@
 
     </div>
     <div class="tab-pane fade" id="Formulario" role="tabpanel" aria-labelledby="profile-tab">
-            <div style="width: 800px;padding: 40px;">
-                <div class="input-group mb-3">
-                    <label class="input-group-text" for="txtNome" style="width:120px;">Nome:</label>
-                    <input type="text" id="txtNome" class="form-control" @bind="usuario.USUNOMECOMPLETO">
-                </div>
-                <div class="input-group mb-3">
-                    <label class="input-group-text" for="txtEmail" style="width:120px;">Email:</label>
-                    <input type="text" id="txtEmail" class="form-control" @bind="usuario.USUEMAIL">
-                </div>
-                <div class="input-group mb-3">
-                    <label class="input-group-text" for="txtCPF" style="width:120px;">CPF:</label>
-                    <input type="text" id="txtCPF" maxlength="14" class="form-control" @bind="usuario.USUCPF">
-                    <label class="input-group-text" for="txtTelefone" style="width:120px;">Telefone:</label>
-                    <input type="text" id="txtTelefone" class="form-control" @bind="usuario.USUTELEFONE">
-                </div>
-                <div class="input-group mb-3">
-                    <label class="input-group-text" for="Login" style="width:120px;">Login:</label>
-                    <input type="text" id="txtLogin" class="form-control" @bind="usuario.USULOGIN">
-                    <label class="input-group-text" for="txtSenha" style="width:120px;">Senha:</label>
-                    <input type="text" id="txtSenha" class="form-control" @bind="usuario.USUSENHA">
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="flexCheckDefault" @bind="usuario.USUATIVO">
-                    <label class="form-check-label" for="flexCheckDefault">
-                        Ativo?
-                    </label>
-                </div>
-                <div style="text-align: center;">
-                    <input type="button" value="Gravar" @onclick="GravarUsuario" class="btn btn-primary">
-                    <input type="button" value="Cancelar" @onclick="CancelarAcao" class="btn btn-warning">
-                </div>
-                <br>
-                <div class="alert alert-danger" style="display: @MostrarMensam;">
-                    <strong>Atenção!</strong> Campos Obrigatório: Nome, Email, Login E Senha.
-                </div>
+        <div style="width: 800px;padding: 40px;">
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="txtNome" style="width:120px;">Nome:(*)</label>
+                <input type="text" id="txtNome" class="form-control" @bind="usuario.USUNOMECOMPLETO">
             </div>
-   </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="txtEmail" style="width:120px;">Email:(*)</label>
+                <input type="text" id="txtEmail" class="form-control" @bind="usuario.USUEMAIL">
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="txtCPF" style="width:120px;">CPF:</label>
+                <input type="text" id="txtCPF" maxlength="14" class="form-control" @bind="usuario.USUCPF">
+                <label class="input-group-text" for="txtTelefone" style="width:120px;">Telefone:</label>
+                <input type="text" id="txtTelefone" class="form-control" @bind="usuario.USUTELEFONE">
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="Login" style="width:120px;">Login:(*)</label>
+                <input type="text" id="txtLogin" class="form-control" @bind="usuario.USULOGIN">
+                <label class="input-group-text" for="txtSenha" style="width:120px;">Senha:(*)</label>
+                <input type="password" id="txtSenha" class="form-control" @bind="usuario.USUSENHA">
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="flexCheckDefault" @bind="usuario.USUATIVO">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Ativo?
+                </label>
+            </div>
+            <div style="text-align: center;">
+                <input type="button" value="Gravar" @onclick="GravarUsuario" class="btn btn-primary">
+                <input type="button" value="Cancelar" @onclick="CancelarAcao" class="btn btn-warning">
+            </div>
+            <br>
+            <div class="alert alert-danger" style="display: @MostrarMensam;">
+                <strong>Atenção!</strong> Campos Obrigatório: Nome, Email, Login E Senha.
+            </div>
+        </div>
+    </div>
 
 </div>
+
+<!-- Modal de Confirmação de Exclusão -->
+<div class="modal fade" id="ModalConfirmarExclusao" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Confirmação de Exclusão</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Confirma a exclusão do Usuário?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" @onclick="ExcluirUsuarioConfirmacao">Sim</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Não</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Campos Obrigatórios -->
+<div class="modal fade" id="ModalCamposObrigatorios" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Atenção: Campos Obrigatórios</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @CamposObrigatorio
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="SetarFoco()" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 @code
 {
     public string MostrarMensam = "none";
+    public string CamposObrigatorio = "";
     public Usuario usuario = new Usuario();
 
     public IList<Usuario> TodosUsuarios = new List<Usuario>();
@@ -120,17 +167,40 @@
     protected override async Task OnInitializedAsync()//Quando Inicia a página
     {
         CarregarUsuarios();
+        JS.InvokeAsync<string>("LoadPage", "");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            JS.InvokeAsync<string>("LoadPage", "");
+            StateHasChanged();
+        }
     }
 
     public void CarregarUsuarios()
     {
         TodosUsuarios = new UsuarioDAO().BuscarUsuarios();
     }
-    async Task ExcluirUsuario(Usuario usuario)
+    async Task ExcluirUsuario(Usuario _usuario)
     {
-        new UsuarioDAO().ExcluirUsuario(usuario);
+        usuario = _usuario;
+        JS.InvokeAsync<string>("ShowModal", "ModalConfirmarExclusao");
+        //new UsuarioDAO().ExcluirUsuario(usuario);
         //JS.InvokeAsync<string>("ShowTab", "tabForm");
-        CarregarUsuarios();
+        //CarregarUsuarios();
+    }
+
+    public void ExcluirUsuarioConfirmacao()
+    {
+        if (usuario.USUID > 0)
+        {
+            new UsuarioDAO().ExcluirUsuario(usuario);
+            CarregarUsuarios();
+            usuario = new Usuario();
+            JS.InvokeAsync<string>("HideModal", "ModalConfirmarExclusao");
+        }
     }
 
     async Task AlterarUsuario(Usuario _usuario)
@@ -141,34 +211,125 @@
 
     public void GravarUsuario()
     {
+        CamposObrigatorio = "";
+
         usuario.USUDATAHORACRIACAO = DateTime.Now;
-        if(string.IsNullOrEmpty(usuario.USULOGIN) || 
-           string.IsNullOrEmpty(usuario.USUEMAIL) ||
-           string.IsNullOrEmpty(usuario.USUNOMECOMPLETO)||
-           string.IsNullOrEmpty(usuario.USUSENHA))
+        if (string.IsNullOrEmpty(usuario.USULOGIN) ||
+        string.IsNullOrEmpty(usuario.USUEMAIL) ||
+        string.IsNullOrEmpty(usuario.USUNOMECOMPLETO) ||
+        string.IsNullOrEmpty(usuario.USUSENHA))
         {
-            MostrarMensam = "block";
-        }else
-        {
-            if(usuario.USUID>0)
+            if (string.IsNullOrEmpty(usuario.USUNOMECOMPLETO))
             {
-                //Isso é uma alteração
-                new UsuarioDAO().AtualizarUsuario(usuario);
+                CamposObrigatorio = "Campos Nome é obrigatório";
             }
-            else
+            else if (string.IsNullOrEmpty(usuario.USUEMAIL))
             {
-                new UsuarioDAO().InserirUsuario(usuario);
+                CamposObrigatorio = "Campos Email é obrigatório";
+            }
+            else if (string.IsNullOrEmpty(usuario.USULOGIN))
+            {
+                CamposObrigatorio = "Campos Login é obrigatório";
+            }
+            else if (string.IsNullOrEmpty(usuario.USUSENHA))
+            {
+                CamposObrigatorio = "Campos Senha é obrigatório";
             }
 
-            CarregarUsuarios();
-            usuario = new Usuario();
-            JS.InvokeAsync<string>("ShowTab", "tabLista");
+            JS.InvokeAsync<string>("ShowModal", "ModalCamposObrigatorios","txtNome");
+            //MostrarMensam = "block";
+        }
+        else
+        {
+            bool Validado = true;
+
+            if (!string.IsNullOrEmpty(usuario.USUEMAIL))
+            {
+                Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+                Match match = regex.Match(usuario.USUEMAIL);
+                if (!match.Success)
+                {
+                    
+                    CamposObrigatorio = "Campos Email é inválido";
+                    JS.InvokeAsync<string>("ShowModal", "ModalCamposObrigatorios");
+                    Validado = false;    
+                }
+            }
+
+            if (!string.IsNullOrEmpty(usuario.USUCPF))
+            {
+
+                if (!IsCpf(usuario.USUCPF))
+                {
+                    CamposObrigatorio = "Campos CPF é inválido";
+
+                    JS.InvokeAsync<string>("ShowModal", "ModalCamposObrigatorios");
+                    Validado = false;
+                }
+            }
+
+            if(Validado)
+            {
+                if (usuario.USUID > 0)
+                {
+                    //Isso é uma alteração
+                    new UsuarioDAO().AtualizarUsuario(usuario);
+                }
+                else
+                {
+                    new UsuarioDAO().InserirUsuario(usuario);
+                }
+
+                CarregarUsuarios();
+                usuario = new Usuario();
+                JS.InvokeAsync<string>("ShowTab", "tabLista");
+            }
         }
     }
+
+    
 
     public void CancelarAcao()
     {
         usuario = new Usuario();
         JS.InvokeAsync<string>("ShowTab", "tabLista");
     }
+
+    public static bool IsCpf(string cpf)
+    {
+        int[] multiplicador1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+        int[] multiplicador2 = new int[10] { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+        string tempCpf;
+        string digito;
+        int soma;
+        int resto;
+        cpf = cpf.Trim();
+        cpf = cpf.Replace(".", "").Replace("-", "");
+        if (cpf.Length != 11)
+            return false;
+        tempCpf = cpf.Substring(0, 9);
+        soma = 0;
+
+        for (int i = 0; i < 9; i++)
+            soma += int.Parse(tempCpf[i].ToString()) * multiplicador1[i];
+        resto = soma % 11;
+        if (resto < 2)
+            resto = 0;
+        else
+            resto = 11 - resto;
+        digito = resto.ToString();
+        tempCpf = tempCpf + digito;
+        soma = 0;
+        for (int i = 0; i < 10; i++)
+            soma += int.Parse(tempCpf[i].ToString()) * multiplicador2[i];
+        resto = soma % 11;
+        if (resto < 2)
+            resto = 0;
+        else
+            resto = 11 - resto;
+        digito = digito + resto.ToString();
+        return cpf.EndsWith(digito);
+
+    }
+
 }
