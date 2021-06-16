@@ -13,70 +13,70 @@ namespace ProjetoBlazor.Pages
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Components;
 #nullable restore
-#line 1 "D:\Uniceub\2021\ADS\_Imports.razor"
+#line 1 "C:\Users\user\Desktop\ProjetoBlazor\treinamento-master\ADS\_Imports.razor"
 using System.Net.Http;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 2 "D:\Uniceub\2021\ADS\_Imports.razor"
+#line 2 "C:\Users\user\Desktop\ProjetoBlazor\treinamento-master\ADS\_Imports.razor"
 using Microsoft.AspNetCore.Authorization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 3 "D:\Uniceub\2021\ADS\_Imports.razor"
+#line 3 "C:\Users\user\Desktop\ProjetoBlazor\treinamento-master\ADS\_Imports.razor"
 using Microsoft.AspNetCore.Components.Authorization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 4 "D:\Uniceub\2021\ADS\_Imports.razor"
+#line 4 "C:\Users\user\Desktop\ProjetoBlazor\treinamento-master\ADS\_Imports.razor"
 using Microsoft.AspNetCore.Components.Forms;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 5 "D:\Uniceub\2021\ADS\_Imports.razor"
+#line 5 "C:\Users\user\Desktop\ProjetoBlazor\treinamento-master\ADS\_Imports.razor"
 using Microsoft.AspNetCore.Components.Routing;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 6 "D:\Uniceub\2021\ADS\_Imports.razor"
+#line 6 "C:\Users\user\Desktop\ProjetoBlazor\treinamento-master\ADS\_Imports.razor"
 using Microsoft.AspNetCore.Components.Web;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 7 "D:\Uniceub\2021\ADS\_Imports.razor"
+#line 7 "C:\Users\user\Desktop\ProjetoBlazor\treinamento-master\ADS\_Imports.razor"
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 8 "D:\Uniceub\2021\ADS\_Imports.razor"
+#line 8 "C:\Users\user\Desktop\ProjetoBlazor\treinamento-master\ADS\_Imports.razor"
 using Microsoft.JSInterop;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 10 "D:\Uniceub\2021\ADS\_Imports.razor"
+#line 10 "C:\Users\user\Desktop\ProjetoBlazor\treinamento-master\ADS\_Imports.razor"
 using ProjetoBlazor.Shared;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 3 "D:\Uniceub\2021\ADS\Pages\Login.razor"
+#line 3 "C:\Users\user\Desktop\ProjetoBlazor\treinamento-master\ADS\Pages\Login.razor"
 using ProjetoBlazor;
 
 #line default
@@ -93,10 +93,10 @@ using ProjetoBlazor;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 55 "D:\Uniceub\2021\ADS\Pages\Login.razor"
+#line 55 "C:\Users\user\Desktop\ProjetoBlazor\treinamento-master\ADS\Pages\Login.razor"
  
-    public string txtLogin = "";
-    public string txtSenha = "";
+    public string txtLogin = "123";
+    public string txtSenha = "123";
     public void Logar()
     {
         Usuario usuario = new UsuarioDAO().BuscarUsuarioByLogin(txtLogin,txtSenha);

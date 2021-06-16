@@ -1692,26 +1692,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\edesg\\.nuget\\packages\\": {}
+    "C:\\Users\\user\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Uniceub\\2021\\ADS\\ProjetoBlazor.csproj",
+      "projectUniqueName": "C:\\Users\\user\\Desktop\\ProjetoBlazor\\treinamento-master\\ADS\\ProjetoBlazor.csproj",
       "projectName": "ProjetoBlazor",
-      "projectPath": "D:\\Uniceub\\2021\\ADS\\ProjetoBlazor.csproj",
-      "packagesPath": "C:\\Users\\edesg\\.nuget\\packages\\",
-      "outputPath": "D:\\Uniceub\\2021\\ADS\\obj\\",
+      "projectPath": "C:\\Users\\user\\Desktop\\ProjetoBlazor\\treinamento-master\\ADS\\ProjetoBlazor.csproj",
+      "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\user\\Desktop\\ProjetoBlazor\\treinamento-master\\ADS\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\edesg\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1769,7 +1767,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.200\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -45,11 +45,11 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (FORNECEDOR item in TodosFornecedores)
+                @foreach (Fornecedor item in TodosFornecedores)
                 {
                     <tr>
                         <td>
-                            <button type="button" class="btn btn-primary" @onclick="() => AlterarForneccedor(item)">
+                            <button type="button" class="btn btn-primary" @onclick="() => AlterarFornecedor(item)">
                                 <span class="oi oi-person" aria-hidden="true"></span>
                             </button>
                         </td>
@@ -75,28 +75,28 @@
         <div style="width: 800px;padding: 40px;">
             <div class="input-group mb-3">
                 <label class="input-group-text" for="txtNome" style="width:120px;">Empresa:</label>
-                <input type="text" id="txtNome" class="form-control" @bind="usuario.FORNEMPRESA">
+                <input type="text" id="txtNome" class="form-control" @bind="fornecedor.FORNEMPRESA">
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text" for="txtEmail" style="width:120px;">Email:</label>
-                <input type="text" id="txtEmail" class="form-control" @bind="usuario.FORNEMAIL">
+                <input type="text" id="txtEmail" class="form-control" @bind="fornecedor.FORNEMAIL">
             </div>
             <div class="input-group mb-3">
                 <label class="input-group-text" for="txtCPF" style="width:120px;">CNPJ:</label>
-                <input type="text" id="txtCPF" maxlength="14" class="form-control" @bind="usuario.FORNCNPJ">
+                <input type="text" id="txtCPF" maxlength="14" class="form-control" @bind="fornecedor.FORNCNPJ">
 
                 <label class="input-group-text" for="txtTelefone" style="width:120px;">Telefone:</label>
-                <input type="text" id="txtTelefone" class="form-control" @bind="usuario.FORNTELEFONE">
+                <input type="text" id="txtTelefone" class="form-control" @bind="fornecedor.FORNTELEFONE">
             </div>
-            
+
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="flexCheckDefault" @bind="usuario.FORNATIVO">
+                <input class="form-check-input" type="checkbox" id="flexCheckDefault" @bind="fornecedor.FORNATIVO">
                 <label class="form-check-label" for="flexCheckDefault">
                     Ativo?
                 </label>
             </div>
             <div style="text-align: center;">
-                <input type="button" value="Gravar" @onclick="GravarUsuario" class="btn btn-primary">
+                <input type="button" value="Gravar" @onclick="GravarFornecedor" class="btn btn-primary">
                 <input type="button" value="Cancelar" @onclick="CancelarAcao" class="btn btn-warning">
             </div>
             <br>
@@ -121,13 +121,25 @@
 
     public void CarregarFornecedores()
     {
-        TodosFornecedores = new FornecedorDAO().BuscarFornecedores();
+        TodosFornecedores = new FornecedorDAO().BuscarFornecedor();
     }
-    async Task ExcluirFornecedor(Fornecedor fornecedor)
+    async Task ExcluirFornecedor(Fornecedor _fornecedor)
     {
-        new FornecedorDAO().ExcluirFornecedor(Fornecedor);
+        fornecedor = _fornecedor;
+        JS.InvokeAsync<string>("ShowModal", "ModalConfirmarExclusao");
+        // new FornecedorDAO().ExcluirFornecedor(Fornecedor);
         //JS.InvokeAsync<string>("ShowTab", "tabForm");
-        CarregarFornecedores();
+        // CarregarFornecedores();
+    }
+    public void ExcluirFornecedorConfirmacao()
+    {
+        if (fornecedor.FORNID > 0)
+        {
+            new FornecedorDAO().ExcluirFornecedor(fornecedor);
+            CarregarFornecedores();
+            fornecedor = new Fornecedor();
+            JS.InvokeAsync<string>("HideModal", "ModalConfirmarExclusao");
+        }
     }
 
     async Task AlterarFornecedor(Fornecedor _fornecedor)
@@ -139,7 +151,7 @@
     public void GravarFornecedor()
     {
         fornecedor.FORNDATAHORACRIACAO = DateTime.Now;
-        if(string.IsNullOrEmpty(fornecedor.FORNLOGIN) || 
+        if(string.IsNullOrEmpty(fornecedor.FORNLOGIN) ||
            string.IsNullOrEmpty(fornecedor.FORNEMAIL) ||
            string.IsNullOrEmpty(fornecedor.FORNEMPRESA)||
            string.IsNullOrEmpty(fornecedor.FORNSENHA))
@@ -157,7 +169,7 @@
                 new FornecedorDAO().InserirFornecedor(fornecedor);
             }
 
-            CarregarFornecedor();
+            CarregarFornecedores();
             fornecedor = new Fornecedor();
             JS.InvokeAsync<string>("ShowTab", "tabLista");
         }

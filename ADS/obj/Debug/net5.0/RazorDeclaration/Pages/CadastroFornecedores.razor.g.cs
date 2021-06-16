@@ -82,8 +82,8 @@ using ProjetoBlazor.Shared;
 #line default
 #line hidden
 #nullable disable
-    [Microsoft.AspNetCore.Components.RouteAttribute("/Logout")]
-    public partial class Logout : Microsoft.AspNetCore.Components.ComponentBase
+    [Microsoft.AspNetCore.Components.RouteAttribute("/CadastroFornecedores")]
+    public partial class CadastroFornecedores : Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998
         protected override void BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
@@ -91,19 +91,84 @@ using ProjetoBlazor.Shared;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 6 "C:\Users\user\Desktop\ProjetoBlazor\treinamento-master\ADS\Pages\Logout.razor"
+#line 111 "C:\Users\user\Desktop\ProjetoBlazor\treinamento-master\ADS\Pages\CadastroFornecedores.razor"
  
+    public string MostrarMensam = "none";
+    public Fornecedor fornecedor = new Fornecedor();
+
+    public IList<Fornecedor> TodosFornecedores = new List<Fornecedor>();
+
     protected override async Task OnInitializedAsync()//Quando Inicia a página
     {
-        await localStorage.ClearAsync();
-         NavManager.NavigateTo("/Login");
+        CarregarFornecedores();
+    }
+
+    public void CarregarFornecedores()
+    {
+        TodosFornecedores = new FornecedorDAO().BuscarFornecedor();
+    }
+    async Task ExcluirFornecedor(Fornecedor _fornecedor)
+    {
+        fornecedor = _fornecedor;
+        JS.InvokeAsync<string>("ShowModal", "ModalConfirmarExclusao");
+        // new FornecedorDAO().ExcluirFornecedor(Fornecedor);
+        //JS.InvokeAsync<string>("ShowTab", "tabForm");
+        // CarregarFornecedores();
+    }
+    public void ExcluirFornecedorConfirmacao()
+    {
+        if (fornecedor.FORNID > 0)
+        {
+            new FornecedorDAO().ExcluirFornecedor(fornecedor);
+            CarregarFornecedores();
+            fornecedor = new Fornecedor();
+            JS.InvokeAsync<string>("HideModal", "ModalConfirmarExclusao");
+        }
+    }
+
+    async Task AlterarFornecedor(Fornecedor _fornecedor)
+    {
+        fornecedor = _fornecedor;
+        JS.InvokeAsync<string>("ShowTab", "tabForm");
+    }
+
+    public void GravarFornecedor()
+    {
+        fornecedor.FORNDATAHORACRIACAO = DateTime.Now;
+        if(string.IsNullOrEmpty(fornecedor.FORNLOGIN) ||
+           string.IsNullOrEmpty(fornecedor.FORNEMAIL) ||
+           string.IsNullOrEmpty(fornecedor.FORNEMPRESA)||
+           string.IsNullOrEmpty(fornecedor.FORNSENHA))
+        {
+            MostrarMensam = "block";
+        }else
+        {
+            if(fornecedor.FORNID>0)
+            {
+                //Isso é uma alteração
+                new FornecedorDAO().AtualizarFornecedor(fornecedor);
+            }
+            else
+            {
+                new FornecedorDAO().InserirFornecedor(fornecedor);
+            }
+
+            CarregarFornecedores();
+            fornecedor = new Fornecedor();
+            JS.InvokeAsync<string>("ShowTab", "tabLista");
+        }
+    }
+
+    public void CancelarAcao()
+    {
+        fornecedor = new Fornecedor();
+        JS.InvokeAsync<string>("ShowTab", "tabLista");
     }
 
 #line default
 #line hidden
 #nullable disable
-        [global::Microsoft.AspNetCore.Components.InjectAttribute] private Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
-        [global::Microsoft.AspNetCore.Components.InjectAttribute] private NavigationManager NavManager { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private IJSRuntime JS { get; set; }
     }
 }
 #pragma warning restore 1591

@@ -46,10 +46,10 @@ namespace ProjetoBlazor
             {
                 conn.Open();
                 conn.Delete<Fornecedor>(fornecedor);
-            }  
+            }
         }
 
-        public Usuario BuscarFornecedor(int FornecedorId)
+        public Fornecedor BuscarFornecedor(int FornecedorId)
         {
             //string sql = "Select * from TB_Fornecedor Where FORNID=@FORNID";
             using (System.Data.SqlClient.SqlConnection conn = new System.Data.SqlClient.SqlConnection(Conexao01))
@@ -57,7 +57,7 @@ namespace ProjetoBlazor
                 conn.Open();
                 return conn.Get<Fornecedor>(FornecedorId);
                 //return conn.Query<Fornecedor>(sql,new{FORNID=FornecedorId}).FirstOrDefault();
-            } 
+            }
         }
 
         public IList<Fornecedor> BuscarFornecedor()
@@ -68,7 +68,7 @@ namespace ProjetoBlazor
                 conn.Open();
                 return conn.GetAll<Fornecedor>().ToList();
                 //return conn.Query<Fornecedor>(sql).ToList();
-            } 
+            }
         }
 
     }
