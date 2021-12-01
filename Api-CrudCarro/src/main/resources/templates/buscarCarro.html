@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar Carro</title>
+</head>
+<body>
+<form action="buscarCarro.html" id="myForm">
+    Digite o ID: <input type="number" name="" id="id"> <br>
+    Modelo: <input type="text" name="nomeCarro" id="nomeCarro" > <br>
+    Valor: <input type="number" name="valorCarro" id="valorCarro" > <br>
+    Marca: <input type="text" name="marcaCarro" id="marcaCarro" > <br>
+    Cilindradas: <input type="number" name="cilindradas" id="cilindradas" > <br>
+    Ano de Lançamento: <input type="number" name="anoLancamento" id="anoLancamento" > <br>
+    <button type="submit">Buscar Carro</button>
+    <button onclick="updateCar();">Atualizar</button>
+    <button onclick="deleteCar();">Deletar</button>
+</form>
+<a href="/"><button>Cadastrar Carro</button></a>
+
+<script>
+    const showData = (result)=>{
+        for(const campo in result){
+            if(document.querySelector("#"+campo)){
+                document.querySelector("#"+campo).value = result[campo]
+            }
+        }
+    }
+
+    function getCarroById(id){
+        fetch('http://localhost:8080/carros/'+id, {method:'Get'})
+        .then(response => { response.json()
+            .then(data => showData(data))
+        })
+        .catch(e => console.log('Deu Erro' + e.message))
+    }
+    const myForm = document.getElementById('myForm');
+
+    myForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        getCarroById(document.querySelector("#id").value);
+        }
+    )
+    function deleteCar(){
+        var id = document.querySelector("#id").value
+        fetch('http://localhost:8080/carros/delete/' + id, {
+          method: 'DELETE',
+        })
+        document.getElementById('myForm').reset();
+    }
+    function updateCar(){
+        if(document.querySelector("#id").value !== null){
+            var carro = new Object();
+            carro.id = document.querySelector("#id").value
+            carro.nomeCarro = document.querySelector("#nomeCarro").value
+            carro.marcaCarro = document.querySelector("#marcaCarro").value
+            carro.valorCarro = document.querySelector("#valorCarro").value
+            carro.cilindradas = document.querySelector("#cilindradas").value
+            carro.anoLancamento = document.querySelector("#anoLancamento").value
+
+            fetch('http://localhost:8080/carros/update', {
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                method: "PUT",
+                body: JSON.stringify(carro)
+                }).then(function(response){
+                    return response.json();
+                }).then(function(data){
+                    showData(data);
+                }).catch(function(error){
+                    console.error(error);
+                })
+        }
+    }
+</script>
+</body>
+</html>

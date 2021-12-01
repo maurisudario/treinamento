@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" xmlns:a="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Teste</title>
+</head>
+<body>
+    <h3>Cadastro de Carros</h3>
+    <form action="buscarCarro.html" id="myForm">
+        Nome Carro: <input type="text" name="nomeCarro" id="nomeCarro"> <br>
+        Valor: <input type="number" name="valorCarro" id="valorCarro"> <br>
+        Marca: <input type="text" name="marcaCarro" id="marcaCarro"> <br>
+        Cilindradas: <input type="number" name="cilindradas" id="cilindradas"> <br>
+        Ano de Lançamento: <input type="number" name="anoLancamento" id="anoLancamento"> <br>
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <a href="buscarCarro"><button>Manipular Carro</button></a>
+<script type="text/javascript">
+    const myForm = document.getElementById('myForm');
+
+    myForm.addEventListener('submit', function(e){
+        e.preventDefault();
+
+        var carro = new Object();
+        carro.nomeCarro = document.querySelector("#nomeCarro").value
+        carro.valorCarro = document.querySelector("#valorCarro").value
+        carro.marcaCarro = document.querySelector("#marcaCarro").value
+        carro.cilindradas = document.querySelector("#cilindradas").value
+        carro.anoLancamento = document.querySelector("#anoLancamento").value
+
+        fetch("http://localhost:8080/carros/add",{
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify(carro)
+        }).then(function(response){
+            return response.json();
+        }).then(function(json){
+            alert("O ID do seu carro é: " + json.id);
+        }).catch(function(error){
+            console.error(error);
+        })
+    })
+</script>
+</body>
+</html>
